@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="style.css">
+    <title>Scratch Moderation Edition</title>
+</head>
+<body>
+    <header><h1>Moderation Dashboard</h1></header>
+    <main>
+        <section id="report-feed">
+            <h2>Pending Reports</h2>
+            <div id="reports-container"></div>
+        </section>
+        <aside id="mod-actions">
+            <button onclick="takeAction('ban')">Ban User</button>
+            <button onclick="takeAction('warn')">Send Warning</button>
+        </aside>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>

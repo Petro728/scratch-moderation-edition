@@ -7,61 +7,125 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Simple Login Protection -->
+    <div id="lockdown-banner">🚨 SYSTEM LOCKDOWN ACTIVE: ALL SUBMISSIONS DISABLED 🚨</div>
+
     <div id="login-overlay">
         <div class="login-box">
             <h2>Mod Access Required</h2>
+            <input type="text" id="mod-name" placeholder="Your Mod Name">
             <input type="password" id="mod-key" placeholder="Enter Moderator Key">
             <button onclick="checkAccess()">Login</button>
-            <p id="login-error" style="color:red; display:none;">Invalid Key</p>
+            <p id="login-error" style="color:red; display:none;">Invalid Key or Name</p>
         </div>
     </div>
 
-    <!-- Main Dashboard (Hidden until login) -->
+    <div id="appeal-view" class="card" style="display:none;">
+        <h2 style="color: #FF4D4D;">You are Banned</h2>
+        <p>Submit an appeal to the Scratch Team below.</p>
+        <input type="text" id="appealUsername" placeholder="Your Username">
+        <textarea id="appealText" placeholder="Why should we unban you?"></textarea>
+        <button onclick="submitAppeal()">Submit Appeal</button>
+        <button onclick="toggleView('mod')" style="background:#8A8A8A !important;">Back to Login</button>
+    </div>
+
     <div id="dashboard" style="display:none;">
         <header>
-            <h1>Scratch Mod Panel</h1>
-            <button onclick="logout()" class="logout-btn">Logout</button>
+            <div class="header-left">
+                <h1>Scratch Mod Panel</h1>
+                <select id="theme-selector" onchange="changeTheme(this.value)">
+                    <option value="default">Scratch Blue</option>
+                    <option value="dark">Dark Mode</option>
+                    <option value="high-contrast">High Contrast</option>
+                </select>
+            </div>
+            <div class="header-right">
+                <button onclick="toggleTraining()" id="training-btn">Training Mode</button>
+                <button id="lockdown-btn" onclick="toggleLockdown()">EMERGENCY LOCKDOWN</button>
+                <button onclick="toggleView('user')" class="logout-btn">Simulate Banned</button>
+            </div>
         </header>
 
         <main>
-            <!-- Form to Submit Reports -->
-            <section class="card">
-                <h2>New Report</h2>
-                <form id="reportForm">
-                    <div class="form-group">
-                        <label>Target User:</label>
-                        <input type="text" id="offenderName" placeholder="Username" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Reason:</label>
-                        <select id="reportReason">
-                            <option value="Spamming">Spamming</option>
-                            <option value="Inappropriate Content">Inappropriate Content</option>
-                            <option value="Harassment">Harassment</option>
-                            <option value="Other">Other</option>
-                        </select>
-                    </div>
-                    <button type="submit">Log Report</button>
-                </form>
+            <section id="training-card" class="card" style="display:none;">
+                <h2>🎓 Training Simulator</h2>
+                <div id="simulation-feed">Waiting for reports...</div>
             </section>
 
-            <!-- Table of Banned Users -->
-            <section class="card">
-                <h2>Banned Users Database</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>User</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="banList"></tbody>
-                </table>
-            </section>
+            <div class="grid">
+                <div class="column">
+                    <section class="card">
+                        <h2>New Report</h2>
+                        <form id="reportForm">
+                            <input type="text" id="offenderName" placeholder="Username" required>
+                            <select id="reportReason">
+                                <option value="Spamming">Spamming</option>
+                                <option value="Inappropriate Content">Inappropriate Content</option>
+                                <option value="Harassment">Harassment</option>
+                                <option value="Other">Other</option>
+                            </select>
+                            <button type="submit">Permanent Ban</button>
+                            <button type="button" onclick="shadowBanUser()" style="background:#8A8A8A !important;">Shadow Ban</button>
+                        </form>
+                    </section>
+
+                    <section class="card">
+                        <h2>Bulk Moderation</h2>
+                        <textarea id="bulkUsernames" placeholder="user1, user2, user3..."></textarea>
+                        <button onclick="processBulk('ban')" style="background:#FF4D4D !important;">Bulk Ban</button>
+                    </section>
+
+                    <section class="card">
+                        <h2>🏆 Moderator Leaderboard</h2>
+                        <table>
+                            <tbody id="leaderboardList"></tbody>
+                        </table>
+                    </section>
+                </div>
+
+                <div class="column">
+                    <section class="card">
+                        <h2>Banned Users</h2>
+                        <table><tbody id="banList"></tbody></table>
+                    </section>
+
+                    <section class="card">
+                        <h2>Shadow List</h2>
+                        <table><tbody id="shadowList"></tbody></table>
+                    </section>
+
+                    <section class="card">
+                        <h2>📩 Appeals</h2>
+                        <div id="appealsList"></div>
+                    </section>
+                </div>
+
+                <div class="column">
+                    <section class="card chat-card">
+                        <h2>💬 Mod Chat</h2>
+                        <div id="chatDisplay"></div>
+                        <div class="chat-input-row">
+                            <input type="text" id="chatInput" placeholder="Message...">
+                            <button onclick="sendChatMessage()">Send</button>
+                        </div>
+                    </section>
+                    
+                    <section class="card log-card">
+                        <h2>📜 History Log</h2>
+                        <div id="modLog"></div>
+                    </section>
+                </div>
+            </div>
         </main>
     </div>
+
+    <div id="notes-modal">
+        <h3 id="notes-user-title">User Notes</h3>
+        <textarea id="noteInput" placeholder="Add private mod note..."></textarea>
+        <div id="existing-notes"></div>
+        <button onclick="saveNote()">Save Note</button>
+        <button onclick="closeNotes()" style="background:#8A8A8A !important;">Close</button>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>
